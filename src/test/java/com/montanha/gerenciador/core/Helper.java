@@ -6,17 +6,61 @@ import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class Helper extends GerenciadorViagensMontanhaBaseTest{
 
+    public static String getGivenAdministratorLoginAndPasswordWhenLoginThenReturnsAuthToken() {
+        JSONObject auth = new JSONObject();
+        try {
+            auth.put("email", "admin@email.com");
+            auth.put("senha", "654321");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return given()
+                .body(auth.toString())
+                .contentType(ContentType.JSON)
+        .when()
+                .post("/api/v1/auth")
+        .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("data", hasKey("token"))
+                .body("data.token", instanceOf(String.class))
+                .body("errors.size()", is(0))
+                .extract().path("data.token")
+                ;
+    }
+
+    public static String getGivenUserLoginAndPasswordWhenLoginThenReturnsAuthToken() {
+        JSONObject auth = new JSONObject();
+        try {
+            auth.put("email", "usuario@email.com");
+            auth.put("senha", "123456");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return given()
+                .body(auth.toString())
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/api/v1/auth")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("data", hasKey("token"))
+                .body("data.token", instanceOf(String.class))
+                .body("errors.size()", is(0))
+                .extract().path("data.token")
+                ;
+    }
+
     public static Response getResponseFromCreatingNewTrip(){
-        String token_adm = LoginTest.getGivenAdministratorLoginAndPasswordWhenLoginThenReturnsAuthToken();
+        String token_adm = getGivenAdministratorLoginAndPasswordWhenLoginThenReturnsAuthToken();
         JSONObject new_trip = new JSONObject();
         try {
             new_trip.put("acompanhante", "Matheus");
@@ -43,7 +87,7 @@ public class Helper extends GerenciadorViagensMontanhaBaseTest{
     }
 
     public static ArrayList<Integer> getListOfAllTripIDs(){
-        String token = LoginTest.getGivenUserLoginAndPasswordWhenLoginThenReturnsAuthToken();
+        String token = getGivenUserLoginAndPasswordWhenLoginThenReturnsAuthToken();
 
         return given()
                 .header("Authorization", token)

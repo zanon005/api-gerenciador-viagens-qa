@@ -52,6 +52,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+				<!--Turns out that this vaadin JSON library conflicts with the JSON.ORG library-->
+				<!-- A solution is to only use one of then, exlucidng the android-jason that comes with SPRING -->
+				<!--https://stackoverflow.com/questions/52980064/maven-spring-boot-found-multiple-occurrences-of-org-json-jsonobject-on-the-cl-->
+				<exclusions>
+					<exclusion>
+						<groupId>com.vaadin.external.google</groupId>
+						<artifactId>android-json</artifactId>
+					</exclusion>
+				</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -61,10 +70,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -111,6 +116,18 @@
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
 			<version>4.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>json-path</artifactId>
+			<version>4.3.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>xml-path</artifactId>
+			<version>4.3.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
